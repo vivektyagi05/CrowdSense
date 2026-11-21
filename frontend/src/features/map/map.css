@@ -1,0 +1,60 @@
+/* Control edges for NEW Phase 4 UI use --ink-500 (4.97:1 on white): the Phase 3 --border-strong is only 1.51:1 (WCAG 1.4.11 wants 3:1). */
+.map, .map-layout, .places, .nearby-controls, .place-list, .stop-callout { --control-edge: var(--ink-500); }
+/* Map feature styles. Imported by MapView/BottomSheet so they ship in the lazy map chunk, never in the entry bundle. */
+.map { position: relative; }
+.map__frame { position: relative; height: clamp(280px, 52vh, 560px); border: 1px solid var(--control-edge); border-radius: var(--radius-md); overflow: hidden; background: #e9edf1; }
+.map__canvas { position: absolute; inset: 0; }
+.map__canvas:focus-within { outline: 3px solid var(--accent); outline-offset: -3px; }
+.map__controls { position: absolute; top: var(--space-3); right: var(--space-3); display: flex; flex-direction: column; gap: var(--space-2); z-index: 2; }
+.map__btn { min-width: 44px; min-height: 44px; padding: 0 var(--space-3); border: 1px solid var(--control-edge); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); font: inherit; font-size: var(--text-lg); font-weight: 600; cursor: pointer; box-shadow: 0 1px 3px rgb(0 0 0 / 0.18); }
+.map__btn--text { font-size: var(--text-sm); }
+.map__btn:hover:not(:disabled) { background: var(--surface-sunken); }
+.map__btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.map__btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.map__loading { position: absolute; left: var(--space-3); bottom: var(--space-3); right: 64px; padding: var(--space-2) var(--space-3); background: var(--surface); border: 1px solid var(--control-edge); border-radius: var(--radius-sm); font-size: var(--text-sm); z-index: 2; }
+.map__notices { display: grid; gap: var(--space-2); margin-top: var(--space-2); }
+.map__notice { margin: 0; padding: var(--space-2) var(--space-3); font-size: var(--text-sm); color: var(--blue-700); background: var(--blue-50); border-radius: var(--radius-sm); }
+.map__notice--warn { color: var(--amber-700); background: var(--amber-50); }
+.map .maplibregl-ctrl-attrib { font-size: 11px; }
+.map-fallback { padding: var(--space-4); border: 1px dashed var(--border-strong); border-radius: var(--radius-md); background: var(--surface-sunken); }
+.map-fallback__title { margin: 0 0 var(--space-1); }
+.map-fallback__list { margin: var(--space-3) 0 0; padding-left: var(--space-5); columns: 2 220px; }
+.map-fallback__list li { padding: 2px 0; }
+.map-geo-note { margin: var(--space-2) 0 0; padding: var(--space-2) var(--space-3); font-size: var(--text-sm); border-radius: var(--radius-sm); color: var(--amber-700); background: var(--amber-50); }
+
+.map-layout { display: grid; gap: var(--space-4); }
+.map-layout__details { min-width: 0; }
+@media (min-width: 1024px) {
+  .map-layout { grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.85fr); align-items: start; }
+  .map-layout__map { position: sticky; top: var(--space-4); }
+  .map-layout .map__frame { height: min(70vh, 640px); }
+}
+
+/* Bottom sheet: phones only. Not modal (the map must stay usable and focus is never trapped). */
+.sheet__handle { display: none; }
+@media (max-width: 767px) {
+  .map-layout__details.sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--surface); border-radius: var(--radius-lg) var(--radius-lg) 0 0; box-shadow: 0 -4px 18px rgb(0 0 0 / 0.22); height: var(--sheet-h, 96px); display: flex; flex-direction: column; transition: height 0.2s ease; }
+  .sheet__handle { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); width: 100%; min-height: 56px; padding: var(--space-2) var(--space-4); border: 0; background: transparent; font: inherit; font-weight: 600; color: var(--text); cursor: grab; touch-action: none; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+  .sheet__handle:focus-visible { outline: none; box-shadow: inset var(--focus-ring); }
+  .sheet__handle::before { content: ''; position: absolute; top: 8px; left: 50%; width: 40px; height: 4px; margin-left: -20px; border-radius: 2px; background: var(--border-strong); }
+  .sheet__body { overflow-y: auto; padding: 0 var(--space-4) var(--space-5); flex: 1; overscroll-behavior: contain; }
+  .map-layout { padding-bottom: 112px; }
+  .sheet[data-state='half'] { --sheet-h: 42dvh; }
+  .sheet[data-state='full'] { --sheet-h: 82dvh; }
+}
+@media (prefers-reduced-motion: reduce) { .map-layout__details.sheet { transition: none; } }
+
+.map-legend { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; font-size: var(--text-sm); margin: var(--space-2) 0 0; }
+.legend { display: inline-block; width: 12px; height: 12px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px var(--border-strong); vertical-align: -1px; }
+.legend--current { background: #b45309; } .legend--sibling { background: #0e7490; } .legend--stop { background: #1f4e8c; } .legend--board { background: #146c2e; } .legend--alight { background: #b3261e; } .legend--user { background: #6d28d9; }
+.place-list { list-style: none; margin: var(--space-2) 0; padding: 0; display: grid; gap: var(--space-1); }
+.place-list__item { display: flex; flex-direction: column; gap: 2px; padding: var(--space-2) var(--space-3); border: 1px solid var(--control-edge); border-radius: var(--radius-sm); min-height: 44px; justify-content: center; }
+.place-list__item a { font-weight: 600; }
+.place-list__item--active { background: var(--emerald-50); border-color: var(--accent); }
+
+.nearby-controls { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: end; margin: var(--space-2) 0; }
+.field-inline { display: grid; gap: var(--space-1); font-size: var(--text-sm); } .field-inline select { min-height: 44px; padding: 0 var(--space-3); border: 1px solid var(--control-edge); border-radius: var(--radius-sm); background: var(--surface); font: inherit; }
+.privacy-note { font-size: var(--text-sm); margin: var(--space-2) 0; }
+.nearby-list__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-2); }
+.nearby-list__actions .btn { min-height: 44px; }
+.nearby-journey { margin-top: var(--space-4); display: grid; gap: var(--space-2); }
